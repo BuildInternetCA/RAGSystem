@@ -1,0 +1,7 @@
+langchain
+langchain-ollama
+langchain-chroma
+pandas
+langchain-community
+langchain_text_splitters
+python_dotenv
