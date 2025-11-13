@@ -1,1 +1,2 @@
-Creating AI RAG system using Ollama
+## Creating AI RAG Agent using Ollama
+We are embedding model as *mxbai-embed-large*
