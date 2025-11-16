@@ -1,30 +1,15 @@
-from langchain_ollama import OllamaEmbeddings
-from langchain_chroma import Chroma
+from ingestion import IngestionEngine
 
 
-def LoadVectorStore(persist_directory="db/chroma_db"):
-    embedding_model = OllamaEmbeddings(model="mxbai-embed-large")
-    vector_store = Chroma(
-        persist_directory=persist_directory,
-        embedding_function=embedding_model, 
-        collection_metadata={"hnsw:space": "cosine"}
-    )
-    return vector_store
+class RetrivalEngine:
+    def __init__(self):
+        self.vector_store = IngestionEngine().GetDatabase()
 
-
-def main():
-    persist_directory = "db/chroma_db"
-    vector_store = LoadVectorStore(persist_directory)
-    print("Vector store loaded successfully.")
-    retriever = vector_store.as_retriever(search_kwargs={"k": 5})
+    def GetRetriever(self, k=5):
+        retriever = self.vector_store.as_retriever(search_kwargs={"k": k})
+        return retriever
     
-    # TESTING ONLY ----------- START
-    sample_query = "The Vanguard Group percentage as shareholder?"
-    relevant_docs = retriever.invoke(sample_query)
-
-    for i, doc in enumerate(relevant_docs, 1):
-        print(f"Document {i}:\n{doc.page_content}\n")
-
-
-if __name__ == "__main__":
-    main()
+    def InvokeRetriever(self, query, k=5):
+        retriever = self.GetRetriever(k)
+        relevant_docs = retriever.invoke(query)
+        return relevant_docs
